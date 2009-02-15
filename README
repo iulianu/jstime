@@ -1,0 +1,35 @@
+jstime is a time and calendar library for JavaScript.
+
+TODO: describe the concepts of AbsoluteTime and Chronology.
+
+Example API:
+
+  Time.instant()  // => AbsoluteTime
+  Time.utc() // => Chronology
+  Time.here() // => Chronology
+  Time( new Date() )   // => Chronology
+  Time( "2009-01-02T12:34:56Z" ) // => Chronology
+  Time.unix( 1231001003 )   // => AbsoluteTime
+  Time.millis( 1231001003000 )   // => AbsoluteTime
+  
+  Time.here().at(2008,12,31) // => Chronology
+  Time.here().at({day: 12, month: 1, year: 2009}) // => Chronology
+  Time.at(2008,12,31) // => Chronology. Synonymous with Time.here().at(...
+  Time.at({day: 12, month: 1, year: 2009}) // => Chronology. Synonymous with Time.here().at(...
+  Time.here().next({hour: 20}) // => Chronology. Next calendar date that satisfies the constraint
+  Time.here().add({hours: 5})  // => Chronology. "hour" works too.
+  Time.here().subtract({days: 1})  // => Chronology. "day" works too. Works just like ".add({days: -1})".
+  Time.here().since( Time.at(2009,1,1) ) // => Period, e.g {days: 5, hours:20, minutes:3}
+  Time.here().until( Time.at(2009,1,1) ) // => Period, e.g {days: 5, hours:20, minutes:3}. since = -until
+  Time.here().strftime("%d-%m-%Y %H:%M:%S %Z") // => string
+  Time.here().toString() // => returns ISO 8601 string
+  
+  Time.instant().toDate()        // => a Date object, for compatibility
+  Time.instant().toMillis()      // => milliseconds since the Epoch, Jan 01 1970 00:00:00 UTC 
+  Time.instant().add( 1000 )     // => AbsoluteTime. Add x milliseconds
+  Time.instant().millisSince( Time.unix(1234567890) ) // => number of milliseconds
+  Time.instant().millisUntil( 1234567890123 ) // => number of milliseconds. since = -until.
+  Time.instant().toString() // => returns ISO 8601 string in Z zone
+
+jstime draws inspiration from the Joda-Time library http://joda-time.sf.net.
+
