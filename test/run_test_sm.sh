@@ -4,6 +4,5 @@
 # You can install spidermonkey under Debian using
 #    aptitude install spidermonkey-bin
 
-cd test
 smjs timeTest.js
 

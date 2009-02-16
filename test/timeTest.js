@@ -7,13 +7,14 @@ function TestInstants(name) {
     TestCase.call(this, name);
 }
 
-function TestInstants_testAt() {
-    this.assertEquals( 1000000000, Time.at(1000000000).toMillis() );
-    this.assertEquals( 1000000000, Time.instant().at(1000000000).toMillis() );
-}
-
 TestInstants.prototype = new TestCase();
-TestInstants.prototype.testAt = TestInstants_testAt;
+
+TestInstants.prototype.testTimestamps = function() {
+    this.assertEquals( 1000000000, Time.millis(1000000000).toMillis() );
+    this.assertEquals( 1000000000, Time.instant().millis(1000000000).toMillis() );
+    this.assertEquals( 1000000000, Time.unix(1000000).toMillis() );
+    this.assertEquals( 1000000000, Time.instant().unix(1000000).toMillis() );
+}
 
 // Kick off the test runner
 load("runner.js");

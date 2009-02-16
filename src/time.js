@@ -17,26 +17,36 @@ Time.instant = function() {
 };
 
 Time.at = function(arg) {
-	if( typeof(arg) === 'number' ) {
-		var millis = arg;
-		return new AbsoluteTimeContext().at(millis);
-	} else if( typeof(arg) === 'object' ) {
+	if( typeof(arg) === 'object' ) {
 		return new ChronologyContext(arg);
 	}
 };
 
+Time.unix = function(arg) {
+	return new AbsoluteTimeContext().unix(arg);
+}
+
+Time.millis = function(arg) {
+	return new AbsoluteTimeContext().millis(arg);
+}
+
 var AbsoluteTimeContext = function() {
-	this.millis = new Date().getTime();
+	this._millis = new Date().getTime();
 	return this;
 };
 
-AbsoluteTimeContext.prototype.at = function(millis) {
-	this.millis = millis;
+AbsoluteTimeContext.prototype.unix = function(timestamp) {
+	this._millis = timestamp * 1000;
 	return this;
 };
 
-AbsoluteTimeContext.prototype.toMillis = function(millis) {
-	return this.millis;
+AbsoluteTimeContext.prototype.millis = function(arg) {
+	this._millis = arg;
+	return this;
+};
+
+AbsoluteTimeContext.prototype.toMillis = function() {
+	return this._millis;
 };
 
 var ChronologyContext = function(spec) {
@@ -44,7 +54,7 @@ var ChronologyContext = function(spec) {
 	return this;
 };
 
-ChronologyContext.prototype.toISOString = function() {
+ChronologyContext.prototype.toString = function() {
 	return this.year + "-" 
 	       + _zeroPad( this.month, 2 ) + "-"
 	       + _zeroPad( this.day, 2 ) + "-"
@@ -53,10 +63,6 @@ ChronologyContext.prototype.toISOString = function() {
 	       + _zeroPad( this.minute, 2 ) + ":"
 	       + _zeroPad( this.second, 2 )
 	       + Time.utcOffsetToISOString( this.utcOffset );
-};
-
-ChronologyContext.prototype.in = function() {
-
 };
 
 Time.utcOffsetToISOString = function( utcOffsetMillis ) {
