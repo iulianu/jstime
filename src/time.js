@@ -9,8 +9,41 @@
 var window = this;
 
 var Time = window.Time = function( arg ) { // let Time be global
+	if( typeof(arg) === 'string' ) {
+		// Code from http://dansnetwork.com/2008/11/01/javascript-iso8601rfc3339-date-parser/
+		var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/;
+		var tempDate = new Date();
+		if (arg.toString().match(new RegExp(regexp))) {
+			var d = arg.match(new RegExp(regexp));
+			var offset = 0;
+			tempDate.setUTCDate(1);
+			tempDate.setUTCFullYear(parseInt(d[1],10));
+			tempDate.setUTCMonth(parseInt(d[3],10) - 1);
+			tempDate.setUTCDate(parseInt(d[5],10));
+			tempDate.setUTCHours(parseInt(d[7],10));
+			tempDate.setUTCMinutes(parseInt(d[9],10));
+			tempDate.setUTCSeconds(parseInt(d[11],10));
+			if (d[12])
+				tempDate.setUTCMilliseconds(parseFloat(d[12]) * 1000);
+			else
+				tempDate.setUTCMilliseconds(0);
+			if (d[13] != 'Z') {
+				offset = (d[15] * 60) + parseInt(d[17],10);
+				offset *= ((d[14] == '-') ? -1 : 1);
+				tempDate.setTime(tempDate.getTime() - offset * 60 * 1000);
+			}
+		} else {
+			tempDate.setTime(Date.parse(arg));
+		}
+		return Time.millis( tempDate.getTime() );
+	} else if( typeof(arg) === 'object' ) {
+		if( arg instanceof Date ) {
+			return Time.millis( arg.getTime() );
+		}
+	}
 	return this;
 };
+
 
 Time.instant = function() {
 	return new AbsoluteTimeContext();
