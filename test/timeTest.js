@@ -23,13 +23,32 @@ TestInstants.prototype.testDateWrapper = function() {
 
 TestInstants.prototype.testStringWrapper = function() {
     var isoStr = "2009-02-13T23:31:30Z";
-    this.assertEquals( 1234567890000, Time(isoStr).toMillis() );
+    this.assertChronologyEquals( 
+        {year: 2009, month: 2, day: 13, hour: 23, minute: 31, second: 30, millisecond: 0, offset: 0},
+	Time(isoStr) );
+
     var isoStrOtherZone = "2009-02-14T01:31:30+0200";
-    this.assertEquals( 1234567890000, Time(isoStrOtherZone).toMillis() );
+    this.assertChronologyEquals( 
+        {year: 2009, month: 2, day: 14, hour: 1, minute: 31, second: 30, millisecond: 0, offset: 7200},
+	Time(isoStrOtherZone) );
+
     var jsStr = "Friday, February 13 23:31:30 UTC 2009";
-    this.assertEquals( 1234567890000, Time(jsStr).toMillis() );
+    this.assertChronologyEquals( 
+        {year: 2009, month: 2, day: 13, hour: 23, minute: 31, second: 30, millisecond: 0, offset: 0},
+	Time(jsStr) );
+
+
     var jsStrOtherZone = "Saturday, February 14 01:31:30 +0200 2009";
-    this.assertEquals( 1234567890000, Time(jsStrOtherZone).toMillis() );
+    this.assertChronologyEquals( 
+        {year: 2009, month: 2, day: 14, hour: 1, minute: 31, second: 30, millisecond: 0, offset: 7200},
+	Time(jsStrOtherZone) );
+
+}
+
+TestCase.prototype.assertChronologyEquals = function( expected, actual ) {
+    for( var key in expected ) {
+        this.assertEquals(expected[key], actual[key]);
+    }
 }
 
 // Kick off the test runner
